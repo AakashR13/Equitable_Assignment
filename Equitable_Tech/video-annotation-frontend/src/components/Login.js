@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import Cookies from 'js-cookie';
 
 const Login = () => {
   const [username, setUsername] = useState('');
@@ -10,13 +11,14 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:8000/api/accounts/login/', {
+      const response = await axios.post('http://localhost:8000/login/', {
         username,
         password,
       });
 
       if (response.data.token) {
         console.log('Login successful:', response.data);
+        Cookies.set('token', response.data.token); // Store the token in a cookie
         // Redirect to video upload page after successful login
         navigate('/upload'); 
       }
@@ -42,7 +44,8 @@ const Login = () => {
           onChange={(e) => setPassword(e.target.value)}
           placeholder="Password"
           style={styles.input}
-        />
+        />      
+
         <button type="submit" style={styles.button}>Login</button>
       </form>
     </div>

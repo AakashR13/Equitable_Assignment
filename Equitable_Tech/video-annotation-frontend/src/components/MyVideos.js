@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import Cookies from 'js-cookie';
 
 const MyVideos = () => {
   const [videos, setVideos] = useState([]);
@@ -12,12 +13,27 @@ const MyVideos = () => {
     const fetchUserAndVideos = async () => {
       try {
         // Fetch the username
-        const userResponse = await axios.get('/api/accounts/user/');
+        const userResponse = await axios.get('http://localhost:8000/user/', {
+            headers: {
+                'Authorization': `Token ${Cookies.get('token')}`
+            }
+        });
         setUsername(userResponse.data.username);
 
+        // let videos = [];
+        // for (let i = 0; i < userResponse.data.files.length; i++) {
+        //     const video = await axios.get(`http://localhost:8000/video/${userResponse.data.files[i]}/`, {
+        //         headers: {
+        //             'Authorization': `Token ${Cookies.get('token')}`
+        //         }
+        //     });
+        //     videos.push(video.data);
+        // }
+
+        setVideos(userResponse.data.files);
         // Fetch the videos
-        const videosResponse = await axios.get('/api/videos/my-videos/');
-        setVideos(videosResponse.data);
+        // const videosResponse = await axios.get('/videos/my-videos/');
+        // setVideos(videos);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -32,8 +48,13 @@ const MyVideos = () => {
       <p>You have uploaded {videos.length} videos.</p> {/* Display video count */}
       <ul style={styles.videoList}>
         {videos.map((video) => (
-          <li key={video.id} style={styles.videoItem}>
-            {video.title} ({video.duration} seconds)
+          <li key={video} style={styles.videoItem}>
+                {video}
+                {/* <video width="320" height="240">
+                    <source src={`video/${video}`} type="video/mp4" />
+                    Your browser does not support the video tag.
+                </video> */}
+                <button onClick={() => navigate(`/annotations/${video}`)}>Edit</button>
           </li>
         ))}
       </ul>

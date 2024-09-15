@@ -54,7 +54,7 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
 ]
 
-ROOT_URLCONF = 'video_annotation_tool.urls'
+ROOT_URLCONF = 'accounts.urls'
 CORS_ORIGIN_ALLOW_ALL = True
 TEMPLATES = [
     {

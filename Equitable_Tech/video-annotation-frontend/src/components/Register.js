@@ -24,7 +24,7 @@ const Register = () => {
 
     try {
       // Call the registration API
-      const response = await axios.post('http://localhost:8000/api/accounts/register/', {
+      const response = await axios.post('http://localhost:8000/register/', {
         username,
         password,
         password_confirm: confirmPassword, // Use password_confirm key

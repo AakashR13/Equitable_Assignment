@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import Cookies from 'js-cookie';
 
 const Upload = () => {
   const [file, setFile] = useState(null);
@@ -12,7 +13,11 @@ const Upload = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const response = await axios.get('/api/accounts/user/'); // Assuming an endpoint to get current user
+        const response = await axios.get('http://localhost:8000/user/', {
+          headers: {
+            'Authorization': `Token ${Cookies.get('token')}`
+          },
+        }); // Assuming an endpoint to get current user
         setUsername(response.data.username);
       } catch (error) {
         console.error('Error fetching user data:', error);
@@ -39,12 +44,13 @@ const Upload = () => {
     }
 
     const formData = new FormData();
-    formData.append('video', file);
+    formData.append('file', file);
 
     try {
-      await axios.post('/api/videos/upload/', formData, {
+      await axios.post('http://localhost:8000/video/', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
+          'Authorization': `Token ${Cookies.get('token')}`
         },
       });
       console.log('Video uploaded successfully');
